@@ -80,7 +80,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password, // Let the model handle hashing
         ]);
 
         Auth::login($user);

@@ -24,11 +24,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
+        'name',
         'email',
         'password',
-        'is_active',
-        'last_login',
         'email_verified_at'
     ];
 
@@ -49,8 +47,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'last_login' => 'datetime',
-        'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
@@ -64,14 +60,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope a query to only include active users.
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    /**
      * Scope a query to only include verified users.
      */
     public function scopeVerified($query)
@@ -80,11 +68,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is active
+     * Check if user is active (always true for basic users)
      */
     public function isActive()
     {
-        return $this->is_active;
+        return true; // All users are considered active in basic setup
     }
 
     /**
@@ -96,11 +84,12 @@ class User extends Authenticatable
     }
 
     /**
-     * Update last login timestamp
+     * Update last login timestamp (placeholder for future implementation)
      */
     public function updateLastLogin()
     {
-        $this->update(['last_login' => Carbon::now()]);
+        // Placeholder - could be implemented with a separate table or session tracking
+        return true;
     }
 
     /**
@@ -110,12 +99,11 @@ class User extends Authenticatable
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
+            'name' => $this->name,
             'email' => $this->email,
-            'is_active' => $this->is_active,
+            'is_active' => $this->isActive(),
             'email_verified' => $this->hasVerifiedEmail(),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'last_login' => $this->last_login ? $this->last_login->format('Y-m-d H:i:s') : null,
         ];
     }
 
@@ -126,7 +114,7 @@ class User extends Authenticatable
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
+            'name' => $this->name,
             'email' => $this->email,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
@@ -153,12 +141,12 @@ class User extends Authenticatable
     }
 
     /**
-     * Search users by username or email
+     * Search users by name or email
      */
     public static function search($query)
     {
         return self::where(function ($q) use ($query) {
-            $q->where('username', 'LIKE', "%{$query}%")
+            $q->where('name', 'LIKE', "%{$query}%")
               ->orWhere('email', 'LIKE', "%{$query}%");
         });
     }
@@ -186,11 +174,8 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        // Auto-set username to lowercase
+        // Auto-set email to lowercase
         static::creating(function ($user) {
-            if ($user->username) {
-                $user->username = strtolower(trim($user->username));
-            }
             if ($user->email) {
                 $user->email = strtolower(trim($user->email));
             }
