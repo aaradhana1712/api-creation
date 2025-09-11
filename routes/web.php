@@ -6,6 +6,8 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\Admin\AdminController;  
 use App\Http\Controllers\Admin\UserController;  
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\MusicCategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
 
 // Root route
 Route::get('/', function () {
@@ -63,6 +65,10 @@ Route::prefix('admin')->name('admin.')->group(function() {
         // User management
         Route::resource('users', UserController::class);
         
+        // Music Categories management
+        Route::resource('music-categories', MusicCategoryController::class);
+        // Music Sub Categories management  
+        Route::resource('sub-category', SubCategoryController::class);
         // Profile management
         Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
