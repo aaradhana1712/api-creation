@@ -24,16 +24,18 @@
                 <i class="icon-user-1"></i>Users 
             </a>
         </li>
-        <li class="{{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-            <a href="#"> 
-                <i class="icon-grid"></i>Products 
+        <li class="{{ request()->routeIs('admin.music-categories.*') ? 'active' : '' }}">
+           <a href="{{ route('admin.music-categories.index') }}"> 
+               <i class="fa fa-music"></i>Music Categories 
+           </a>
+           <li class="{{ request()->routeIs('admin.sub-category.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.sub-category.index') }}"> 
+                <i class="fa fa-list"></i>Subcategories 
             </a>
         </li>
-        <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-            <a href="#"> 
-                <i class="icon-contract"></i>Orders 
-            </a>
-        </li>
+       </li>
+        
+        
         <li class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
             <a href="#"> 
                 <i class="fa fa-bar-chart"></i>Reports 
